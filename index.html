@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teuku Sem Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+      }
+    </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+    <!-- AOS Animate On Scroll CSS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  </head>
+  <body class="font-sans text-gray-800 bg-white dark:bg-gray-900 dark:text-gray-100">
+    <!-- Navbar -->
+    <header class="sticky top-0 bg-white dark:bg-gray-900 z-50 flex justify-between items-center p-6 max-w-5xl mx-auto">
+      <h1 class="text-xl font-bold">Teuku Sem</h1>
+      <div class="flex items-center gap-2 md:hidden">
+        <!-- Dark mode toggle (mobile only) -->
+        <button id="dark-toggle-mobile" class="bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full p-2 shadow hover:bg-gray-300 dark:hover:bg-gray-700 transition" aria-label="Toggle dark mode">
+          <span id="dark-toggle-icon-mobile">🌙</span>
+        </button>
+        <!-- Hamburger button (hidden on md and up) -->
+        <button id="nav-toggle" class="flex flex-col justify-center items-center w-8 h-8 focus:outline-none group" aria-label="Toggle navigation">
+          <span class="transition-all duration-300 block w-6 h-0.5 bg-gray-800 mb-1 origin-center group-[.open]:rotate-45 group-[.open]:translate-y-1.5"></span>
+          <span class="transition-all duration-300 block w-6 h-0.5 bg-gray-800 mb-1 group-[.open]:opacity-0"></span>
+          <span class="transition-all duration-300 block w-6 h-0.5 bg-gray-800 group-[.open]:-rotate-45 group-[.open]:-translate-y-1.5"></span>
+        </button>
+      </div>
+      <!-- Nav links -->
+      <nav id="nav-menu" class="space-x-4 text-sm hidden md:flex">
+        <a href="#hero" class="hover:underline">Home</a>
+        <a href="#about" class="hover:underline">About</a>
+        <a href="#skills" class="hover:underline">Skills</a>
+        <a href="#portfolio" class="hover:underline">Portfolio</a>
+        <a href="#contact" class="text-blue-600 font-bold hover:underline">Contact</a>
+      </nav>
+      <!-- Dark mode toggle (desktop only) -->
+      <button id="dark-toggle" class="hidden md:inline-flex bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full p-2 shadow hover:bg-gray-300 dark:hover:bg-gray-700 transition md:ml-2" aria-label="Toggle dark mode">
+        <span id="dark-toggle-icon">🌙</span>
+      </button>
+      <!-- Mobile dropdown -->
+      <nav id="nav-dropdown" class="absolute left-0 right-0 top-20 bg-white dark:bg-gray-800 shadow-lg rounded-lg flex-col text-sm p-4 space-y-2 z-50 hidden md:hidden max-w-5xl mx-auto transition-all duration-500 ease-out opacity-0 scale-95 pointer-events-none">
+        <a href="#hero" class="block hover:underline transition-all duration-300 delay-100 opacity-0 translate-y-2">Home</a>
+        <a href="#about" class="block hover:underline transition-all duration-300 delay-200 opacity-0 translate-y-2">About</a>
+        <a href="#skills" class="block hover:underline transition-all duration-300 delay-300 opacity-0 translate-y-2">Skills</a>
+        <a href="#portfolio" class="block hover:underline transition-all duration-300 delay-400 opacity-0 translate-y-2">Portfolio</a>
+        <a href="#contact" class="block text-blue-600 font-bold hover:underline transition-all duration-300 delay-500 opacity-0 translate-y-2">Contact</a>
+      </nav>
+    </header>
+    <script>
+      // Prevent scroll restoration on reload to avoid navbar jump
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      // Hamburger menu toggle
+      const navToggle = document.getElementById('nav-toggle');
+      const navDropdown = document.getElementById('nav-dropdown');
+      const dropdownLinks = navDropdown.querySelectorAll('a');
+      function openDropdown() {
+        navDropdown.classList.remove('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
+        setTimeout(() => {
+          navDropdown.classList.add('opacity-100', 'scale-100');
+          dropdownLinks.forEach((link, i) => {
+            setTimeout(() => {
+              link.classList.remove('opacity-0', 'translate-y-2');
+              link.classList.add('opacity-100', 'translate-y-0');
+            }, 100 + i * 80);
+          });
+        }, 10);
+      }
+      function closeDropdown() {
+        navDropdown.classList.remove('opacity-100', 'scale-100');
+        dropdownLinks.forEach((link) => {
+          link.classList.add('opacity-0', 'translate-y-2');
+          link.classList.remove('opacity-100', 'translate-y-0');
+        });
+        setTimeout(() => {
+          navDropdown.classList.add('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
+        }, 400);
+      }
+      document.addEventListener('click', function(e) {
+        if (navToggle.contains(e.target)) {
+          if (navDropdown.classList.contains('hidden')) {
+            navToggle.classList.add('open');
+            openDropdown();
+          } else {
+            navToggle.classList.remove('open');
+            closeDropdown();
+          }
+        } else if (!navDropdown.contains(e.target)) {
+          navToggle.classList.remove('open');
+          closeDropdown();
+        }
+      });
+      // Close mobile menu after clicking a link and enable smooth scroll
+      dropdownLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          if (href && href.startsWith('#')) {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth' });
+            }
+            navToggle.classList.remove('open');
+            closeDropdown();
+          }
+        });
+      });
+      // Dark mode toggle logic for both mobile and desktop
+      function setDarkMode(enabled) {
+        if (enabled) {
+          document.documentElement.classList.add('dark');
+          if (darkToggleIcon) darkToggleIcon.textContent = '☀️';
+          if (darkToggleIconMobile) darkToggleIconMobile.textContent = '☀️';
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          if (darkToggleIcon) darkToggleIcon.textContent = '🌙';
+          if (darkToggleIconMobile) darkToggleIconMobile.textContent = '🌙';
+          localStorage.setItem('theme', 'light');
+        }
+      }
+      // Initial theme
+      const darkToggle = document.getElementById('dark-toggle');
+      const darkToggleIcon = document.getElementById('dark-toggle-icon');
+      const darkToggleMobile = document.getElementById('dark-toggle-mobile');
+      const darkToggleIconMobile = document.getElementById('dark-toggle-icon-mobile');
+      setDarkMode(localStorage.getItem('theme') === 'dark' || (window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.getItem('theme')));
+      if (darkToggle) darkToggle.addEventListener('click', () => setDarkMode(!document.documentElement.classList.contains('dark')));
+      if (darkToggleMobile) darkToggleMobile.addEventListener('click', () => setDarkMode(!document.documentElement.classList.contains('dark')));
+    </script>
+
+    <!-- Hero -->
+    <section id="hero" class="scroll-mt-32 bg-gray-100 dark:bg-gray-900 py-12" data-aos="fade-up" data-aos-duration="700">
+      <div class="max-w-5xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between gap-8 px-6">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-bold mb-4 dark:text-gray-100">Hi, I'm Teuku Samsuddin Al Amir</h2>
+          <p class="text-lg mb-2 dark:text-gray-300">Frontend Developer based in Kebon Bawang, Jakarta Utara</p>
+          <p class="text-base mb-6 dark:text-gray-300">Experienced Frontend Developer specializing in React.js and Next.js. Passionate about creating clean, responsive, and user-friendly web applications. Eager to contribute to a team dedicated to building exceptional online experiences.</p>
+          <div class="mb-4 flex flex-col gap-1 text-sm text-gray-600 dark:text-gray-400">
+            <span><strong>Email:</strong> samsuddinteuku@gmail.com</span>
+            <span><strong>Phone:</strong> +6285173449053</span>
+            <span><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/teukusem" class="text-blue-600 underline dark:text-blue-400" target="_blank">teukusem</a></span>
+          </div>
+          <a href="#about" class="px-5 py-2 border-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 border-gray-800 dark:border-gray-200 dark:text-gray-100">Learn more</a>
+        </div>
+        <div class="w-40 h-40 md:w-52 md:h-52 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-4xl font-bold text-white">TS</div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="scroll-mt-32 py-12 px-6 max-w-5xl mx-auto" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100">
+      <h2 class="text-2xl font-bold mb-4 dark:text-white">About Me</h2>
+      <p class="text-sm md:text-base text-gray-700 dark:text-white">
+        Experienced Frontend Developer specializing in React.js and Next.js. Passionate about creating clean, responsive, and user-friendly web applications. Eager to contribute to a team dedicated to building exceptional online experiences.
+      </p>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" class="scroll-mt-32 py-12 px-6 max-w-5xl mx-auto" data-aos="fade-up" data-aos-duration="700" data-aos-delay="200">
+      <h2 class="text-2xl font-bold mb-6">Skills</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="border rounded p-4 bg-gradient-to-r from-blue-100 to-blue-50 border-l-8 border-blue-400 shadow-sm" data-aos="fade-up" data-aos-duration="600" data-aos-delay="250">
+          <h3 class="text-lg font-semibold mb-2 text-blue-700">Frameworks & Libraries</h3>
+          <p class="text-sm text-gray-700">React.js, Next.js</p>
+        </div>
+        <div class="border rounded p-4 bg-gradient-to-r from-pink-100 to-pink-50 border-l-8 border-pink-400 shadow-sm" data-aos="fade-up" data-aos-duration="600" data-aos-delay="300">
+          <h3 class="text-lg font-semibold mb-2 text-pink-700">Programming Languages</h3>
+          <p class="text-sm text-gray-700">TypeScript, JavaScript (ES6+)</p>
+        </div>
+        <div class="border rounded p-4 bg-gradient-to-r from-green-100 to-green-50 border-l-8 border-green-400 shadow-sm" data-aos="fade-up" data-aos-duration="600" data-aos-delay="350">
+          <h3 class="text-lg font-semibold mb-2 text-green-700">State Management</h3>
+          <p class="text-sm text-gray-700">Redux, Context API, Zustand</p>
+        </div>
+        <div class="border rounded p-4 bg-gradient-to-r from-yellow-100 to-yellow-50 border-l-8 border-yellow-400 shadow-sm" data-aos="fade-up" data-aos-duration="600" data-aos-delay="400">
+          <h3 class="text-lg font-semibold mb-2 text-yellow-700">Styling & UI</h3>
+          <p class="text-sm text-gray-700">Tailwind CSS, Material-UI, CSS3</p>
+        </div>
+        <div class="border rounded p-4 bg-gradient-to-r from-purple-100 to-purple-50 border-l-8 border-purple-400 shadow-sm" data-aos="fade-up" data-aos-duration="600" data-aos-delay="450">
+          <h3 class="text-lg font-semibold mb-2 text-purple-700">Developer Tools</h3>
+          <p class="text-sm text-gray-700">Git, npm, Yarn, Webpack</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience" class="scroll-mt-32 py-12 px-6 max-w-5xl mx-auto" data-aos="fade-up" data-aos-duration="700" data-aos-delay="300">
+      <h2 class="text-2xl font-bold mb-6 dark:text-white">Experience</h2>
+      <div class="space-y-8">
+        <div class="border-l-4 border-blue-400 pl-4" data-aos="fade-up" data-aos-duration="600" data-aos-delay="350">
+          <h3 class="text-lg font-semibold dark:text-white">Fullstack Engineer <span class="text-gray-500 font-normal dark:text-gray-300">@ PT. Pelindo Solusi Digital</span></h3>
+          <p class="text-sm text-gray-600 mb-1 dark:text-white">September 2022 - Present | Jakarta | Fulltime (WFO)</p>
+          <ul class="list-disc ml-5 text-sm text-gray-700 dark:text-white">
+            <li>Developed and maintained core applications using React.js and Next.js.</li>
+            <li>Architected and established a new, standardized development environment utilizing ESLint and Commitizen to enforce code quality and streamline team collaboration.</li>
+            <li>Improved application performance and reduced code duplication by creating and maintaining a library of reusable global components with TypeScript.</li>
+            <li>Collaborated effectively in a cross-functional team, working closely with UI/UX designers and back-end developers to troubleshoot issues and deliver polished new features.</li>
+          </ul>
+        </div>
+        <div class="border-l-4 border-blue-400 pl-4" data-aos="fade-up" data-aos-duration="600" data-aos-delay="400">
+          <h3 class="text-lg font-semibold dark:text-white">Frontend Engineer <span class="text-gray-500 font-normal dark:text-gray-300">@ Waizly Technology</span></h3>
+          <p class="text-sm text-gray-600 mb-1 dark:text-white">October 2023 - January 2025 | Jakarta | Part-time (Remote)</p>
+          <ul class="list-disc ml-5 text-sm text-gray-700 dark:text-white">
+            <li>Built and maintained responsive, data-driven applications using Next.js and React.js to power Bebaskirim's all-in-one shipping management dashboard.</li>
+            <li>Authored and managed a robust library of global UI components with TypeScript, ensuring consistency and rapid implementation of new features like order tracking and logistics reporting.</li>
+            <li>Systematically troubleshooted and resolved complex bugs within the application, guaranteeing a smooth and reliable experience for users managing their shipments.</li>
+            <li>Enhanced developer efficiency and platform stability by refactoring existing components into a more modular and reusable architecture.</li>
+          </ul>
+        </div>
+        <div class="border-l-4 border-blue-400 pl-4" data-aos="fade-up" data-aos-duration="600" data-aos-delay="450">
+          <h3 class="text-lg font-semibold dark:text-white">Frontend Engineer <span class="text-gray-500 font-normal dark:text-gray-300">@ JENDELA 360</span></h3>
+          <p class="text-sm text-gray-600 mb-1 dark:text-white">June 2022 - September 2022 | Jakarta | Internship (Hybrid)</p>
+          <ul class="list-disc ml-5 text-sm text-gray-700 dark:text-white">
+            <li>Developed a WhatsApp feature for bulk messaging.</li>
+            <li>Implemented a sales data charting feature for visual analytics.</li>
+            <li>Created KPR calculation feature for user financial planning.</li>
+            <li>Created reusable global components with React TypeScript.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio -->
+    <section id="portfolio" class="scroll-mt-32 py-12 px-6 max-w-5xl mx-auto" data-aos="fade-up" data-aos-duration="700" data-aos-delay="400">
+      <h2 class="text-2xl font-bold mb-6">Portfolio</h2>
+      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <a href="https://app.bebaskirim.com" target="_blank" class="group bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-800 border-0 border-t-8 border-blue-400 dark:border-blue-600 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col overflow-hidden" data-aos="fade-up" data-aos-duration="600" data-aos-delay="450">
+          <img src="https://assets-global.website-files.com/63e0e2e7e0e1b2b2e2e2e2e7/63e0e2e7e0e1b2b2e2e2e2e8_dashboard.png" alt="Bebaskirim Dashboard" class="h-40 w-full object-contain bg-gray-100 dark:bg-gray-700 group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/400x160?text=No+Image';"/>
+          <div class="p-4 flex-1 flex flex-col">
+            <h4 class="font-semibold text-lg mb-1 group-hover:text-blue-600 transition dark:text-gray-100">Bebaskirim Dashboard</h4>
+            <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">Shipping management dashboard for Bebaskirim.</p>
+            <span class="text-xs text-gray-500 dark:text-gray-400">ReactJS, NextJS, TypeScript</span>
+          </div>
+        </a>
+        <!-- Card 2 -->
+        <a href="https://www.pilkadapro.com" target="_blank" class="group bg-gradient-to-br from-pink-100 to-pink-50 dark:from-pink-900 dark:to-pink-800 border-0 border-t-8 border-pink-400 dark:border-pink-600 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col overflow-hidden" data-aos="fade-up" data-aos-duration="600" data-aos-delay="500">
+          <img src="https://www.pilkadapro.com/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" alt="PilkadaPro" class="h-40 w-full object-contain bg-gray-100 dark:bg-gray-700 group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/400x160?text=No+Image';"/>
+          <div class="p-4 flex-1 flex flex-col">
+            <h4 class="font-semibold text-lg mb-1 group-hover:text-pink-600 transition dark:text-gray-100">PilkadaPro</h4>
+            <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">An all-in-one platform designed to streamline supporter management and optimize campaign team success.</p>
+            <span class="text-xs text-gray-500 dark:text-gray-400">ReactJS, NextJS, TypeScript</span>
+          </div>
+        </a>
+        <!-- Card 3 -->
+        <a href="https://ultimatesindoraya.com" target="_blank" class="group bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900 dark:to-green-800 border-0 border-t-8 border-green-400 dark:border-green-600 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col overflow-hidden" data-aos="fade-up" data-aos-duration="600" data-aos-delay="550">
+          <img src="https://ultimatesindoraya.com/wp-content/uploads/2023/07/cropped-logo-utsr-1-1-180x180.png" alt="Ultima Tesindo Raya" class="h-40 w-full object-contain bg-gray-100 dark:bg-gray-700 group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/400x160?text=No+Image';"/>
+          <div class="p-4 flex-1 flex flex-col">
+            <h4 class="font-semibold text-lg mb-1 group-hover:text-green-600 transition dark:text-gray-100">Ultima Tesindo Raya</h4>
+            <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">Created a digital platform for PT Ultima Tesindo Raya to reliably present their advanced engineering solutions to the energy sector.</p>
+            <span class="text-xs text-gray-500 dark:text-gray-400">WordPress</span>
+          </div>
+        </a>
+        <!-- Card 4 -->
+        <a href="https://phinnisi.pelindo.co.id" target="_blank" class="group bg-gradient-to-br from-yellow-100 to-yellow-50 dark:from-yellow-900 dark:to-yellow-800 border-0 border-t-8 border-yellow-400 dark:border-yellow-600 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col overflow-hidden" data-aos="fade-up" data-aos-duration="600" data-aos-delay="600">
+          <img src="https://phinnisi.pelindo.co.id/assets/images/logo.png" alt="Phinnisi" class="h-40 w-full object-contain bg-gray-100 dark:bg-gray-700 group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/400x160?text=No+Image';"/>
+          <div class="p-4 flex-1 flex flex-col">
+            <h4 class="font-semibold text-lg mb-1 group-hover:text-yellow-600 transition dark:text-gray-100">Phinnisi</h4>
+            <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">Contributed to Phinnisi, an integrated platform that streamlines end-to-end port vessel services, enhancing operational efficiency from initial planning to final billing.</p>
+            <span class="text-xs text-gray-500 dark:text-gray-400">ReactJS, NextJS, Node.js</span>
+          </div>
+        </a>
+      </div>
+    </section>
+    <!-- Contact -->
+    <section id="contact" class="scroll-mt-32 py-12 px-6 max-w-5xl mx-auto dark:bg-gray-900 dark:text-gray-100" data-aos="fade-up" data-aos-duration="700" data-aos-delay="500">
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <h2 class="text-2xl font-bold mb-4">Contact me</h2>
+          <p class="text-sm text-gray-700 dark:text-gray-300">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>
+        <form class="space-y-4">
+          <input type="text" placeholder="Name" class="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100" />
+          <input type="email" placeholder="Email" class="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100" />
+          <textarea rows="4" placeholder="Message" class="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"></textarea>
+          <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Send</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 bg-gray-100 dark:bg-gray-900 text-center">
+      <p class="text-sm text-gray-600 dark:text-gray-400">&copy; 2023 Teuku Sem. All rights reserved.</p>
+    </footer>
+    <!-- AOS Animate On Scroll JS -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      AOS.init({ once: true, easing: 'ease-out-cubic' });
+    </script>
+  </body>
+</html>
