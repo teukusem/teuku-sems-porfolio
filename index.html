@@ -148,7 +148,7 @@
           <p class="text-base mb-6 dark:text-gray-300">Experienced Frontend Developer specializing in React.js and Next.js. Passionate about creating clean, responsive, and user-friendly web applications. Eager to contribute to a team dedicated to building exceptional online experiences.</p>
           <div class="mb-4 flex flex-col gap-1 text-sm text-gray-600 dark:text-gray-400">
             <span><strong>Email:</strong> samsuddinteuku@gmail.com</span>
-            <span><strong>Phone:</strong> +6285173449053</span>
+            <!-- <span><strong>Phone:</strong> +6285173449053</span> -->
             <span><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/teukusem" class="text-blue-600 underline dark:text-blue-400" target="_blank">teukusem</a></span>
           </div>
           <a href="#about" class="px-5 py-2 border-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 border-gray-800 dark:border-gray-200 dark:text-gray-100">Learn more</a>
@@ -277,13 +277,13 @@
         <div>
           <h2 class="text-2xl font-bold mb-4">Contact me</h2>
           <p class="text-sm text-gray-700 dark:text-gray-300">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Interested in collaborating or have a question? Feel free to reach out via the form, or email me directly at <a href="mailto:samsuddinteuku@gmail.com" class="text-blue-600 underline dark:text-blue-400">samsuddinteuku@gmail.com</a>. I look forward to connecting with you!
           </p>
         </div>
-        <form class="space-y-4">
-          <input type="text" placeholder="Name" class="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100" />
-          <input type="email" placeholder="Email" class="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100" />
-          <textarea rows="4" placeholder="Message" class="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"></textarea>
+        <form class="space-y-4" id="contact-form">
+          <input type="text" id="contact-name" placeholder="Name" class="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100" />
+          <input type="email" id="contact-email" placeholder="Email" class="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100" />
+          <textarea rows="4" id="contact-message" placeholder="Message" class="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"></textarea>
           <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Send</button>
         </form>
       </div>
@@ -297,6 +297,18 @@
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script>
       AOS.init({ once: true, easing: 'ease-out-cubic' });
+    </script>
+    <script>
+      // Contact form: open mailto on submit
+      document.getElementById('contact-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('contact-name').value;
+        const email = document.getElementById('contact-email').value;
+        const message = document.getElementById('contact-message').value;
+        const subject = encodeURIComponent('Contact from Portfolio Website');
+        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+        window.location.href = `mailto:samsuddinteuku@gmail.com?subject=${subject}&body=${body}`;
+      });
     </script>
   </body>
 </html>
